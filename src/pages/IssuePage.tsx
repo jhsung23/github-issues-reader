@@ -7,7 +7,7 @@ import { IssueListItem, ListFallback } from '@/components/domain/issue';
 import { useIntersectionObserver } from '@/hooks';
 import { Issue } from '@/types/issue';
 
-const PER_LIST = 5;
+const PER_LIST = 4;
 
 const IssuePage = () => {
   const { issues, isLoading, hasNextPage, fetchMoreIssues } = useIssueQuery();
