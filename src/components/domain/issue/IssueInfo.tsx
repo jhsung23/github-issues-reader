@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import { Issue } from '@/types/issue';
 import { Heading } from '@/components/atom';
+import { Issue } from '@/types/issue';
 import { getFormatDateString } from '@/utils';
 
 type Props = {
@@ -9,13 +9,13 @@ type Props = {
 };
 
 const IssueInfo = ({ issue }: Props) => {
-  const { issueId, title, userName, createdAt, comments } = issue;
+  const { issueNumber, title, userName, createdAt, comments } = issue;
 
   return (
     <Container>
       <Info>
         <Heading size="large">
-          #{issueId} {title}
+          #{issueNumber} {title}
         </Heading>
         <Heading size="small">
           작성자: {userName}, 작성일: {getFormatDateString(new Date(createdAt))}
@@ -44,4 +44,5 @@ const Comment = styled.div`
   align-items: center;
   justify-content: center;
   font-size: medium;
+  min-width: 90px;
 `;
