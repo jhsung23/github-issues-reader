@@ -1,5 +1,6 @@
 export type Issue = {
   issueId: number;
+  issueNumber: number;
   title: string;
   userName: string;
   createdAt: Date;
