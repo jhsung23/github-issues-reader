@@ -31,6 +31,9 @@ const useIssueQuery = () => {
         if (res.data.length < PER_PAGE || res.data.length === 0) setHasNextPage(false);
         setIssues((prev) => [...prev, ...res.data]);
         setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
       });
   }, [pageNumber]);
 
