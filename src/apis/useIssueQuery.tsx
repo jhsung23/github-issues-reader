@@ -1,54 +1,77 @@
-import { Endpoints } from '@octokit/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
+import { IssuesResponseData, getIssues } from './octokitService';
 
-import octokitInstance from '@/apis/octokitInstance';
-import { REPO } from '@/constants';
-
-// eslint-disable-next-line react-refresh/only-export-components
-const ENDPOINT = 'GET /repos/{owner}/{repo}/issues' as const;
 const PER_PAGE = 20;
 
-type IssuesResponse = Endpoints[typeof ENDPOINT]['response'];
-export type IssuesResponseData = IssuesResponse['data'];
+type IssueQueryState = {
+  issues: IssuesResponseData;
+  isLoading: boolean;
+  hasNextPage: boolean;
+};
 
 const useIssueQuery = () => {
-  const [issues, setIssues] = useState<IssuesResponseData>([]);
-  const [hasNextPage, setHasNextPage] = useState(true);
+  const [{ issues, isLoading, hasNextPage }, dispatch] = useReducer(issueReducer, {
+    issues: [],
+    isLoading: false,
+    hasNextPage: false,
+  });
   const [pageNumber, setPageNumber] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const getIssues = useCallback(async () => {
-    await octokitInstance()
-      .request(ENDPOINT, {
-        owner: REPO.OWNER,
-        repo: REPO.NAME,
-        page: pageNumber,
-        per_page: PER_PAGE,
-        state: 'open',
-        sort: 'comments',
-      })
-      .then((res) => {
-        if (res.data.length < PER_PAGE || res.data.length === 0) setHasNextPage(false);
-        setIssues((prev) => [...prev, ...res.data]);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
+  const fetchIssues = useCallback(async (pageNumber: number) => {
+    try {
+      const responseData = await getIssues(pageNumber, PER_PAGE);
+      dispatch({
+        type: 'loadIssue',
+        issues: responseData,
+        hasNextPage: responseData.length < PER_PAGE || responseData.length === 0 ? false : true, // FIXME
       });
-  }, [pageNumber]);
+    } catch (e) {
+      window.alert(e);
+    }
+  }, []);
 
-  const fetchMoreIssues = () => {
+  const fetchNextPageIssues = useCallback(() => {
     setPageNumber(pageNumber + 1);
-  };
+    dispatch({ type: 'requestIssue' });
+    fetchIssues(pageNumber + 1);
+  }, [pageNumber, fetchIssues]);
 
   useEffect(() => {
-    if (hasNextPage) {
-      setIsLoading(true);
-      getIssues();
-    }
-  }, [hasNextPage, getIssues]);
+    dispatch({ type: 'requestIssue' });
+    fetchIssues(1);
+  }, [fetchIssues]);
 
-  return { issues, isLoading, hasNextPage, fetchMoreIssues };
+  return { issues, isLoading, hasNextPage, fetchNextPageIssues };
+};
+
+const issueReducer = (
+  state: IssueQueryState,
+  action:
+    | {
+        type: 'loadIssue';
+        issues: IssuesResponseData;
+        hasNextPage: boolean;
+      }
+    | {
+        type: 'requestIssue';
+      },
+): IssueQueryState => {
+  switch (action.type) {
+    case 'requestIssue': {
+      return { ...state, isLoading: true };
+    }
+    case 'loadIssue': {
+      return {
+        ...state,
+        issues: [...state.issues, ...action.issues!],
+        isLoading: false,
+        hasNextPage: action.hasNextPage!,
+      };
+    }
+    default: {
+      throw new Error();
+    }
+  }
 };
 
 export default useIssueQuery;
