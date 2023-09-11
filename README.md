@@ -30,7 +30,12 @@ facebook/react repository의 issues 목록과 상세 내용을 확인하는 웹 
 yarn
 ```
 
-2. 개발 환경에서 실행
+2. root 디렉토리에 `.env` 파일을 만들어 환경 변수를 등록해 주세요.
+```bash
+VITE_GITHUB_AUTH_TOKEN = YOUR_GITHUB_AUTH_TOKEN
+```  
+
+3. 개발 환경에서 실행
 ```bash
 yarn dev
 ```
