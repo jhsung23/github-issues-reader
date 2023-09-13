@@ -1,21 +1,16 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import styled from 'styled-components';
 
-import useIssueQuery from '@/apis/useIssueQuery';
 import { Ad, Loading } from '@/components/common';
 import { IssueListItem, ListFallback } from '@/components/domain/issue';
-import { useIntersectionObserver } from '@/hooks';
+import { useIssues, useIntersectionObserver } from '@/hooks';
 import { parseIssue } from '@/utils';
 
 const PER_LIST = 4;
 
 const IssueList = () => {
-  const { issues, isLoading, hasNextPage, fetchNextPageIssues } = useIssueQuery();
-  const [observerRef, inView] = useIntersectionObserver({ threshold: 0.3 });
-
-  useEffect(() => {
-    if (!isLoading && inView) fetchNextPageIssues();
-  }, [isLoading, inView, fetchNextPageIssues]);
+  const { issues, isLoading, hasNextPage, fetchNextPage } = useIssues();
+  const [observerRef] = useIntersectionObserver({ threshold: 0.1 }, fetchNextPage);
 
   return (
     <>

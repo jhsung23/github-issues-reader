@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const useIntersectionObserver = (options?: IntersectionObserverInit) => {
+const useIntersectionObserver = (options?: IntersectionObserverInit, callback?: () => void) => {
   const observerRef = useRef(null);
   const [inView, setInView] = useState(false);
 
@@ -8,15 +8,19 @@ const useIntersectionObserver = (options?: IntersectionObserverInit) => {
     const currentRef = observerRef.current;
     if (!currentRef) return;
 
-    const observer = new IntersectionObserver(([entries]) => {
-      setInView(entries.isIntersecting);
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+      if (entry.isIntersecting && callback) {
+        callback();
+        observer.unobserve(entry.target);
+      }
     }, options);
     observer.observe(currentRef);
 
     return () => {
-      if (currentRef) observer.unobserve(currentRef);
+      if (currentRef) observer.disconnect();
     };
-  }, [options]);
+  }, [options, callback]);
 
   return [observerRef, inView] as const;
 };
