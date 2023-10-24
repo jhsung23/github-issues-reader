@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
 import styled from 'styled-components';
 
-import { Ad, Loading } from '@/components/common';
-import { IssueListItem, ListFallback } from '@/components/domain/issue';
-import { useIssues, useIntersectionObserver } from '@/hooks';
+import { Ad, ListSkeleton } from '@/components/common';
+import { IssueListItem, NoListItem } from '@/components/domain/issue';
+import { useIntersectionObserver, useIssues } from '@/hooks';
 import { parseIssue } from '@/utils';
 
 const PER_LIST = 4;
@@ -28,10 +28,10 @@ const IssueList = () => {
             })}
           </Ul>
           {!isLoading && hasNextPage && <div ref={observerRef}></div>}
-          {isLoading && <Loading />}
+          {isLoading && <ListSkeleton />}
         </>
       ) : (
-        <ListFallback />
+        <NoListItem />
       )}
     </>
   );
