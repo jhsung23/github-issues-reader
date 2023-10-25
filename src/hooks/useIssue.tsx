@@ -1,6 +1,9 @@
+import { RequestError } from 'octokit';
 import { useCallback, useEffect, useReducer } from 'react';
+import { useErrorBoundary } from 'react-error-boundary';
 
 import { IssueResponseData, getIssueDetail } from '@/apis/issueService';
+import { getErrorMessage } from '@/utils';
 
 type IssueQueryState = {
   issue: undefined | IssueResponseData;
@@ -14,23 +17,29 @@ const initialIssueQueryState: IssueQueryState = {
 
 const useIssue = (issueNumber: number) => {
   const [{ issue, isLoading }, dispatch] = useReducer(issueReducer, initialIssueQueryState);
+  const { showBoundary } = useErrorBoundary();
   const isFirstLoad = issue === undefined;
 
-  const loadIssueDetail = useCallback(async (issueNumber: number) => {
-    dispatch({ type: 'requestIssue' });
+  const loadIssueDetail = useCallback(
+    async (issueNumber: number) => {
+      dispatch({ type: 'requestIssue' });
 
-    try {
-      const issueResponse = await getIssueDetail(issueNumber);
-      dispatch({ type: 'loadIssue', issue: issueResponse });
-    } catch (e) {
-      dispatch({ type: 'loadIssue', issue: undefined });
-      window.alert(e);
-    }
-  }, []);
+      try {
+        const issueResponse = await getIssueDetail(issueNumber);
+        dispatch({ type: 'loadIssue', issue: issueResponse });
+      } catch (e) {
+        dispatch({ type: 'loadIssue', issue: undefined });
+        if (e instanceof RequestError) {
+          showBoundary(getErrorMessage(e.status));
+        }
+      }
+    },
+    [showBoundary],
+  );
 
   useEffect(() => {
     if (isNaN(issueNumber)) {
-      throw new Error();
+      throw new Error(getErrorMessage(404));
     }
     loadIssueDetail(issueNumber);
   }, [issueNumber, loadIssueDetail]);

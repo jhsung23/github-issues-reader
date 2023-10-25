@@ -1,8 +1,10 @@
+import { ErrorBoundary } from 'react-error-boundary';
 import { createBrowserRouter } from 'react-router-dom';
 
 import App from '@/App';
-import { Error } from '@/components/common';
+import { Error, Fallback } from '@/components/common';
 import { IssueDetailPage, IssuePage } from '@/pages';
+import { logError } from '@/utils';
 
 const router = createBrowserRouter([
   {
@@ -16,7 +18,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'issues/:id',
-        element: <IssueDetailPage />,
+        element: (
+          <ErrorBoundary FallbackComponent={Fallback} onError={logError}>
+            <IssueDetailPage />
+          </ErrorBoundary>
+        ),
       },
     ],
   },
