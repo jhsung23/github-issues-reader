@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import styled from 'styled-components';
 
-import { Ad, ListSkeleton } from '@/components/common';
+import { Ad, ListSkeleton, Spinner } from '@/components/common';
 import { IssueListItem, NoListItem } from '@/components/domain/issue';
 import { useIntersectionObserver, useIssues } from '@/hooks';
 import { parseIssue } from '@/utils';
@@ -31,7 +31,7 @@ const IssueList = () => {
             })}
           </Ul>
           {isFetchable && <div ref={observerRef}></div>}
-          {isFetching && <ListSkeleton />}
+          {isFetching && <Spinner />}
         </>
       ) : (
         <NoListItem />

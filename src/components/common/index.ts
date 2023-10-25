@@ -5,3 +5,4 @@ export { default as ListItemSkeleton } from './ListItemSkeleton';
 export { default as ListSkeleton } from './ListSkeleton';
 export { default as MarkdownViewer } from './MarkdownViewer';
 export { default as Skeleton } from './Skeleton';
+export { default as Spinner } from './Spinner';
