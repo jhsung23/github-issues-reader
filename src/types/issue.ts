@@ -1,10 +1,12 @@
+import { IssueResponseData } from '@/apis/issueService';
+
 export type Issue = {
-  issueId: number;
-  issueNumber: number;
-  title: string;
-  userName: string;
-  createdAt: Date;
-  comments: number;
-  avatarUrl: string;
-  body: string;
+  issueId: IssueResponseData['id'];
+  issueNumber: IssueResponseData['number'];
+  title: IssueResponseData['title'];
+  userName: Exclude<IssueResponseData['user'], null>['login'];
+  createdAt: IssueResponseData['created_at'];
+  comments: IssueResponseData['comments'];
+  avatarUrl: Exclude<IssueResponseData['user'], null>['avatar_url'];
+  body: IssueResponseData['body'];
 };

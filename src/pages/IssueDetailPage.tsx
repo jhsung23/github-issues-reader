@@ -1,21 +1,26 @@
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Img } from '@/components/atom';
-import { MarkdownViewer } from '@/components/common';
+import { IssueDetailSkeleton, MarkdownViewer } from '@/components/common';
 import { IssueInfo } from '@/components/domain/issue';
-import { Issue } from '@/types/issue';
+import { useIssue } from '@/hooks';
+import { parseIssue } from '@/utils';
 
 const IssueDetailPage = () => {
-  const { state: issue }: { state: Issue } = useLocation();
+  const { id } = useParams();
+  const { issue, isFirstLoad, isLoading } = useIssue(Number(id));
+  const parsedIssue = issue ? parseIssue(issue) : undefined;
+
+  if (isFirstLoad || isLoading) return <IssueDetailSkeleton />;
 
   return (
     <Article>
       <ArticleInfo>
-        <Img src={issue.avatarUrl} height={'50px'} width={'50px'} />
-        <IssueInfo issue={issue} />
+        <Img src={parsedIssue?.avatarUrl} height={'50px'} width={'50px'} />
+        <IssueInfo issue={parsedIssue!} />
       </ArticleInfo>
-      <MarkdownViewer content={issue.body} />
+      <MarkdownViewer content={parsedIssue?.body as string} />
     </Article>
   );
 };

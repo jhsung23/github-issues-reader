@@ -20,3 +20,18 @@ export const getIssues = async (pageNumber: number, perPage: number) => {
 
   return response.data;
 };
+
+const ISSUE_ENDPOINT = `${ENDPOINT}/{issue_number}` as const;
+
+export type IssueResponse = Endpoints[typeof ISSUE_ENDPOINT]['response'];
+export type IssueResponseData = IssueResponse['data'];
+
+export const getIssueDetail = async (issueNumber: number) => {
+  const response = await octokitInstance().request(ISSUE_ENDPOINT, {
+    owner: REPO.OWNER,
+    repo: REPO.NAME,
+    issue_number: issueNumber,
+  });
+
+  return response.data;
+};

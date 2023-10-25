@@ -1,20 +1,23 @@
 import { Fragment } from 'react';
 import styled from 'styled-components';
 
-import { Ad, Loading } from '@/components/common';
-import { IssueListItem, ListFallback } from '@/components/domain/issue';
-import { useIssues, useIntersectionObserver } from '@/hooks';
+import { Ad, ListSkeleton, Spinner } from '@/components/common';
+import { IssueListItem, NoListItem } from '@/components/domain/issue';
+import { useIntersectionObserver, useIssues } from '@/hooks';
 import { parseIssue } from '@/utils';
 
 const PER_LIST = 4;
 
 const IssueList = () => {
-  const { issues, isLoading, hasNextPage, fetchNextPage } = useIssues();
+  const { issues, isFirstLoad, isFetching, hasNextPage, fetchNextPage } = useIssues();
   const [observerRef] = useIntersectionObserver({ threshold: 0.1 }, fetchNextPage);
+  const isFetchable = !isFetching && hasNextPage;
+
+  if (isFirstLoad) return <ListSkeleton />;
 
   return (
     <>
-      {issues.length ? (
+      {issues && issues.length ? (
         <>
           <Ul>
             {issues.map((issue, order) => {
@@ -27,11 +30,11 @@ const IssueList = () => {
               );
             })}
           </Ul>
-          {!isLoading && hasNextPage && <div ref={observerRef}></div>}
-          {isLoading && <Loading />}
+          {isFetchable && <div ref={observerRef}></div>}
+          {isFetching && <Spinner />}
         </>
       ) : (
-        <ListFallback />
+        <NoListItem />
       )}
     </>
   );

@@ -1,15 +1,15 @@
-import { IssuesResponseData } from '@/apis/octokitService';
+import { IssueResponseData } from '@/apis/issueService';
 import { Issue } from '@/types/issue';
 
-const parseIssue = (issue: IssuesResponseData[number]): Issue => ({
+const parseIssue = (issue: IssueResponseData): Issue => ({
   issueId: issue.id,
   issueNumber: issue.number,
-  userName: issue.user ? issue.user.login : '알 수 없음',
   title: issue.title,
-  createdAt: new Date(issue.created_at),
+  userName: issue.user?.login || 'unknown',
+  createdAt: issue.created_at,
   comments: issue.comments,
-  avatarUrl: issue.user ? issue.user.avatar_url : 'https://i.stack.imgur.com/frlIf.png',
-  body: issue.body ?? '',
+  avatarUrl: issue.user?.avatar_url || 'https://i.stack.imgur.com/frlIf.png',
+  body: issue.body || '',
 });
 
 export default parseIssue;

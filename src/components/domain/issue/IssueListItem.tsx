@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { Issue } from '@/types/issue';
 import { IssueInfo } from '@/components/domain/issue';
+import { Issue } from '@/types/issue';
 
 type Props = {
   issue: Issue;
@@ -11,7 +11,7 @@ type Props = {
 const IssueListItem = ({ issue }: Props) => {
   return (
     <Li>
-      <StyledLink to={`/issues/${issue.issueId}`} state={issue}>
+      <StyledLink to={`/issues/${issue.issueNumber}`} state={issue}>
         <IssueInfo issue={issue} />
       </StyledLink>
     </Li>
