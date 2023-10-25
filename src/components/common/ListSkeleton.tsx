@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import ListItemSkeleton from './ListItemSkeleton';
 
-const NUMBER_OF_SKELETON = 10;
+const NUMBER_OF_SKELETON = 12;
 
 const ListSkeleton = () => {
   return (

@@ -1,13 +1,14 @@
-import styled from 'styled-components';
 import '@/animation.css';
+import { ComponentPropsWithRef } from 'react';
+import styled from 'styled-components';
 
-type Props = {
-  width: string;
-  height: string;
-};
+interface Props extends ComponentPropsWithRef<'div'> {
+  width?: string;
+  height?: string;
+}
 
-const Skeleton = ({ width, height }: Props) => {
-  return <SkeletonBox width={width} height={height} />;
+const Skeleton = ({ width, height, ...props }: Props) => {
+  return <SkeletonBox width={width} height={height} {...props} />;
 };
 
 export default Skeleton;
