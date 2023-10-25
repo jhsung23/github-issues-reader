@@ -9,12 +9,15 @@ import { parseIssue } from '@/utils';
 const PER_LIST = 4;
 
 const IssueList = () => {
-  const { issues, isLoading, hasNextPage, fetchNextPage } = useIssues();
+  const { issues, isFirstLoad, isFetching, hasNextPage, fetchNextPage } = useIssues();
   const [observerRef] = useIntersectionObserver({ threshold: 0.1 }, fetchNextPage);
+  const isFetchable = !isFetching && hasNextPage;
+
+  if (isFirstLoad) return <ListSkeleton />;
 
   return (
     <>
-      {issues.length ? (
+      {issues && issues.length ? (
         <>
           <Ul>
             {issues.map((issue, order) => {
@@ -27,8 +30,8 @@ const IssueList = () => {
               );
             })}
           </Ul>
-          {!isLoading && hasNextPage && <div ref={observerRef}></div>}
-          {isLoading && <ListSkeleton />}
+          {isFetchable && <div ref={observerRef}></div>}
+          {isFetching && <ListSkeleton />}
         </>
       ) : (
         <NoListItem />
