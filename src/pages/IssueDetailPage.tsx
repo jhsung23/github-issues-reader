@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { IssueResponseData } from '@/apis/octokitService';
+import { IssueResponseData } from '@/apis/issueService';
 import { Img } from '@/components/atom';
 import { IssueDetailSkeleton, MarkdownViewer } from '@/components/common';
 import { IssueInfo } from '@/components/domain/issue';

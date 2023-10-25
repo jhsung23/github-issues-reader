@@ -1,4 +1,4 @@
-import { IssuesResponseData } from '@/apis/octokitService';
+import { IssuesResponseData } from '@/apis/issueService';
 import { Issue } from '@/types/issue';
 
 const parseIssue = (issue: IssuesResponseData[number]): Issue => ({

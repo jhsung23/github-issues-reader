@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 
-import { IssueResponseData, getIssueDetail } from '@/apis/octokitService';
+import { IssueResponseData, getIssueDetail } from '@/apis/issueService';
 
 type IssueQueryState = {
   issue: undefined | IssueResponseData;

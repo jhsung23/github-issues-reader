@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { IssuesResponseData } from '@/apis/octokitService';
+import { IssuesResponseData } from '@/apis/issueService';
 
 type IssuesState = {
   issues: IssuesResponseData | undefined;

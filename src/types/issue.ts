@@ -1,4 +1,4 @@
-import { IssueResponseData } from '@/apis/octokitService';
+import { IssueResponseData } from '@/apis/issueService';
 
 export type Issue = {
   issueId: IssueResponseData['id'];

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { getIssues } from '@/apis/octokitService';
+import { getIssues } from '@/apis/issueService';
 import { issuesState } from '@/atoms/issue';
 
 const PER_PAGE = 20;
